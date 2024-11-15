@@ -189,6 +189,12 @@ macOS
      included, you'll have to install one. Homebrew (https://brew.sh) is a
      good way to do that.
 
+Windows (MSYS2)
+---------------
+    - This is only tested on Windows 10.
+    - You must install MSYS2 (https://www.msys2.org/)
+    - This only compiles in the MSYS environment
+    - It builds but doesn't run correctly. Expect this file to be updated when it does.
 
 SGI Irix
 --------
