@@ -9,7 +9,7 @@
 
 #include "load_utils.h"
 
-#if (defined(MACOSX) && !defined(JAGUAR)) || defined(LINUX)
+#if (defined(MACOSX) && !defined(JAGUAR)) || defined(LINUX) || defined(MSYS2)
 
 #include <dlfcn.h>
 

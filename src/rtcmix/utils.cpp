@@ -9,6 +9,9 @@
 #ifdef linux
 #include <limits.h>
 #endif
+#if defined(MSYS2)
+#include <climits>
+#endif
 
 extern "C" {
     Handle m_bits(const Arg args[], const int nargs);
