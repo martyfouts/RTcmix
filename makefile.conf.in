@@ -266,6 +266,48 @@ ifeq ($(ARCH),FREEBSD)
   RTLIB_INSTALL_DIR = $(LIBDIR)
 endif
 
+# -- msys2 ----------------------------------------------------
+ifeq ($(ARCH),MSYS2)
+  ARCHFLAGS = -DMSYS2 $(ARCH_BITFLAGS)
+  ARCH_RTLDFLAGS = -Wl,-rpath $(LIBDIR)
+  RTLIBTYPE = DYNAMIC
+  ifeq ($(BUILDTYPE), STANDALONE)
+    ARCHFLAGS += -DSTANDALONE
+    SHLIB = rtcmix
+	INSTTYPE = DYNAMIC
+    ifndef AUDIODRIVER
+	    AUDIODRIVER=OSS
+    endif
+  endif
+  ifeq ($(BUILDTYPE), LINUXEMBEDDED)
+    ARCHFLAGS += -DEMBEDDED
+    AUDIODRIVER=EMBEDDEDAUDIO
+    CMIX_FLAGS += -DEMBEDDEDAUDIO
+    INSTTYPE = STATIC
+    SHLIB = rtcmix_embedded
+    # This is overridable in site.conf
+    ifndef RTLIBTYPE
+        RTLIBTYPE = DYNAMIC
+    endif
+       RTLIB_INSTALL_DIR = $(LIBDIR)
+    endif
+    ifeq ($(RTLIBTYPE), DYNAMIC) 
+        SHLIB_SUFFIX = dll
+        RTLIB_LDFLAGS = $(DYNAMIC_LDFLAGS)
+    else
+        ARCH_RTLDFLAGS =
+        SHLIB_SUFFIX = a
+        RTLIB_LDFLAGS =
+   endif
+  CC = gcc
+  CXX = g++ -Wno-deprecated
+  LD = ld
+  MAKE = make
+  INSTALL = cp -f
+  RANLIB = touch
+  SHELL = /bin/sh
+endif
+
 # -- Pd -----------------------------------------------------
 ifeq ($(BUILDTYPE), PD)
 	ARCHFLAGS += -DEMBEDDED -DPD -I$(PD_INCLUDES)
@@ -385,7 +427,17 @@ ifeq ($(ARCH),FREEBSD)
   DYNAMIC_LDFLAGS = $(SHARED_LDFLAGS)
   DYN = -rdynamic
 endif
-
+ifeq ($(ARCH),MSYS2)
+  ifeq ($(AUDIODRIVER),ALSA)
+    SYS_LDFLAGS = -lasound -lpthread -lm -ldl #-lefence
+  else
+    SYS_LDFLAGS = -lpthread -lm -ldl #-lefence
+  endif
+  DSO_LDFLAGS = $(OPT) $(SYSLIBS)
+  SHARED_LDFLAGS = -shared -Wl,-soname,$(RTLIB)
+  DYNAMIC_LDFLAGS = $(SHARED_LDFLAGS)
+  DYN = -rdynamic
+endif
 LDFLAGS = $(ARCH_RTLDFLAGS) $(RTLDFLAGS)
 SYSLIBS = $(ARCH_RTLDFLAGS) -L$(LIBDIR) -lgen $(SYS_LDFLAGS)
 
