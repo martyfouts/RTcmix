@@ -24,6 +24,9 @@
 #ifdef LINUX
    #include <fcntl.h>
 #endif /* LINUX */
+#if defined(MSYS2)
+#define strcasestr strcmp
+#endif
 
 /* code that lets user specify buses for input sources */
 //#define INPUT_BUS_SUPPORT

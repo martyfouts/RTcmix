@@ -6,7 +6,7 @@
 #ifndef _SNDLIB_SUPPORT_H_
 #define _SNDLIB_SUPPORT_H_
 
-#if defined(LINUX)
+#if defined(LINUX) || defined(MSYS2)
 #include <endian.h>      /* so that sndlib.h will get host byte-order right */
 #elif defined(MACOSX)
 #include <machine/endian.h>
