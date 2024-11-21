@@ -19,6 +19,7 @@
 depend
 *.dSYM
 lib*.a
+.vscode/*
 autom4te.cache/*
 bin
 bin/*
